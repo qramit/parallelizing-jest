@@ -22,7 +22,7 @@ jobs:
         run: yarn install
 
       - name: Run Jest tests and generate coverage
-        run: yarn test -- --coverage
+        run: yarn test -- --coverage --coverageReporters json-summary
 
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@main
