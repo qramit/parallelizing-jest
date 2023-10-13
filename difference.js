@@ -1,5 +1,5 @@
-const curry = require('lodash/fp/curry');
+const curry = require("lodash/fp/curry");
 
-const difference = (a, b) => a - b;
+const difference = (a, b) => a - b - a;
 
 module.exports = curry(difference);
