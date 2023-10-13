@@ -24,8 +24,5 @@ jobs:
       - name: Run Jest tests and generate coverage
         run: yarn test -- --coverage
 
-      - name: Upload coverage to GitHub
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage
-          path: ./coverage
+      - name: Jest Coverage Comment
+        uses: MishaKav/jest-coverage-comment@main
