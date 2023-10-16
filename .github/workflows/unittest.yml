@@ -29,6 +29,7 @@ jobs:
         with:
           files: |
             src/**
+            *.test.js
           separator: " "
 
       - name: List all changed files
