@@ -27,12 +27,13 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v39
         with:
-          files_yaml: |
-            src:
-             - src/**
+          files: |
+            src/**
+          separator: " "
+
       - name: List all changed files
         run: |
-          echo "${{ steps.changed-files-yaml.outputs.src_all_changed_files }}"
+          echo "${{ steps.changed-files.outputs.added_files }}"
 
       # - name: Identify Modified Files
 
@@ -43,7 +44,7 @@ jobs:
 
       - name: Run Jest for Modified Files
         run: |
-          modified_files="${{ steps.changed-files-yaml.outputs.src_all_changed_files }}"
+          modified_files="${{ steps.changed-files.outputs.added_files }}"
           if [ -n "$modified_files" ]; then
             yarn test:ci --findRelatedTests $modified_files | tee ./coverage.txt && exit $?
           else
