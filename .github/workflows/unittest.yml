@@ -29,10 +29,7 @@ jobs:
         with:
           files_yaml: |
             src:
-             - src/components/**/*.{js,jsx,ts,tsx}
-             - src/pages/*.{js,jsx,ts,tsx}
-             - src/utils/*.{js,jsx,ts,tsx}
-
+             - src/**
       - name: List all changed files
         run: |
           echo "${{ steps.changed-files-yaml.outputs.src_all_changed_files }}"
