@@ -1,0 +1,63 @@
+name: Jest Unit Test and Coverage
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # fetch all history for all branches and tags
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v39
+        with:
+          files: |
+            src/components/**
+            src/pages/*.{js,jsx,ts,tsx}
+            __tests__/src/**
+          separator: " "
+
+      - name: List all changed files
+        run: |
+          echo "${{ steps.changed-files.outputs.all_changed_files }}"
+
+      # - name: Identify Modified Files
+
+      #   id: modified-files
+      #   run: |
+      #     git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} > modified-files.txt
+      #     echo "::set-output name=modified_files::$(cat modified-files.txt)"
+
+      - name: Run Jest for Modified Files
+        run: |
+          modified_files="${{ steps.changed-files.outputs.all_changed_files }}"
+          if [ -n "$modified_files" ]; then
+            yarn test:ci --findRelatedTests $modified_files | tee ./coverage.txt && exit $?
+          else
+            echo "No modified files to test."
+          fi
+
+      - name: Jest Coverage Comment
+        uses: MishaKav/jest-coverage-comment@main
+        with:
+          title: Unit Test Report
+          summary-title: Coverage Summary
+          coverage-title: Coverage Details
+          coverage-path: ./coverage.txt
+          coverage-summary-path: ./coverage/coverage-summary.json
