@@ -26,6 +26,8 @@ jobs:
         uses: tj-actions/changed-files@v39
         with:
           separator: " "
+          files: |
+            src/*
       - name: List all changed files
         run: |
           echo "${{ steps.changed-files.outputs.all_changed_files }}"
