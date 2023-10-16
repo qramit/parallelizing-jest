@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -25,12 +27,15 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v39
         with:
-          separator: " "
-          files: |
-            src/*
+          files_yaml: |
+            src:
+             - src/components/**/*.{js,jsx,ts,tsx}
+             - src/pages/*.{js,jsx,ts,tsx}
+             - src/utils/*.{js,jsx,ts,tsx}
+
       - name: List all changed files
         run: |
-          echo "${{ steps.changed-files.outputs.all_changed_files }}"
+          echo "${{ steps.changed-files-yaml.outputs.src_all_changed_files }}"
 
       # - name: Identify Modified Files
 
@@ -41,7 +46,7 @@ jobs:
 
       - name: Run Jest for Modified Files
         run: |
-          modified_files="${{ steps.changed-files.outputs.all_changed_files }}"
+          modified_files="${{ steps.changed-files-yaml.outputs.src_all_changed_files }}"
           if [ -n "$modified_files" ]; then
             yarn test:ci --findRelatedTests $modified_files | tee ./coverage.txt && exit $?
           else
